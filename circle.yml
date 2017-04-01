@@ -4,7 +4,8 @@ machine:
 
 dependencies:
   override:
-    # 建構方式使用 docker build
+    - sudo apt-get install python-pip python-dev build-essential
+    - sudo pip install 'awsebcli==3.7.4' --force-reinstall
     - docker build -t circleci .
 
 test:
@@ -13,3 +14,9 @@ test:
     # 使用 curl 測試 docker 是否有順利執行 node
     - docker run -d -p 3000:3000 circleci; sleep 10
     - curl --retry 10 --retry-delay 5 -v http://localhost:3000
+
+deployment:
+  production:
+    branch: develop
+    commands:
+      - eb deploy development
